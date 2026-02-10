@@ -4,7 +4,7 @@
 > **"실제 공격 시나리오 재현부터 실시간 차단, 모니터링까지 — 통합 보안 시스템 구축"**
 
 <p align="center">
-  <img src="./images/3tier_architecture.png" width="600">
+  ![3-Tier Architecture](../img/3tier.drawio.png)
 </p>
 
 ---
@@ -27,7 +27,7 @@
 ### ✨ 핵심 기능
 
 <p align="center">
-  <img src="./images/attack_distribution.png" width="500">
+  ![Attack Distribution](../img/image_type.png)
 </p>
 
 * **실시간 공격 탐지 및 차단**: SQL Injection, XSS, Path Traversal 등 OWASP Top 10 공격 유형 100% 대응
@@ -43,7 +43,7 @@
 웹 애플리케이션 보안의 중요성은 알고 있지만, 실제로 어떤 공격이 어떻게 이루어지고 어떻게 방어해야 하는지 체감하기 어려웠습니다.
 
 <p align="center">
-  <img src="./images/attack_timeline.png" width="500">
+  ![Attack Timeline](../img/image_time.png)
 </p>
 
 1. **이론과 실무의 간극**: 보안 이론은 배우지만, 실제 공격을 재현하고 방어하는 경험 부족
@@ -136,7 +136,7 @@ graph TB
 ### 5-1. 공격 유형별 분포
 
 <p align="center">
-  <img src="./images/attack_distribution.png" width="500">
+  ![Attack Distribution](../img/image_type.png)
 </p>
 
 **테스트 기간**: 2026년 2월 1일 ~ 2월 5일 (총 5일간)  
@@ -156,7 +156,7 @@ graph TB
 ### 5-2. 시간대별 공격 패턴
 
 <p align="center">
-  <img src="./images/attack_timeline.png" width="600">
+  ![Attack Timeline](../img/image_time.png)
 </p>
 
 **2026년 2월 4일 공격 트래픽 분석**:
@@ -173,7 +173,7 @@ graph TB
 ### 5-3. 상위 공격 IP 분석
 
 <p align="center">
-  <img src="./images/top_attack_ips.png" width="500">
+  ![Top Attack IPs](../img/image_ip.png)
 </p>
 
 | 순위 | IP 주소 | 공격 건수 | 비고 |
@@ -192,7 +192,7 @@ graph TB
 ### 6-1. ModSecurity 차단 화면
 
 <p align="center">
-  <img src="./images/waf_blocked.png" width="600">
+  ![WAF Blocked](../img/image_waf.png)
 </p>
 
 악의적인 요청이 탐지되면 **403 Forbidden** 응답을 반환하며 접근을 즉시 차단합니다.
@@ -239,7 +239,7 @@ ModSecurity의 Paranoia Level에 따른 탐지 성능 비교:
 ### 지역별 고객 분석 대시보드
 
 <p align="center">
-  <img src="./images/customer_analytics.png" width="650">
+  ![Customer Analytics](../img/image_nowaf.png)
 </p>
 
 **구현 기능**:
