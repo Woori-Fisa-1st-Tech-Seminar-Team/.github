@@ -10,10 +10,10 @@
 
 ## 🧑‍💻 팀원 소개
 
-| <img src="https://avatars.githubusercontent.com/u/YOUR_GITHUB_ID?v=4" width="100px"> | <img src="https://avatars.githubusercontent.com/u/YOUR_GITHUB_ID?v=4" width="100px"> | <img src="https://avatars.githubusercontent.com/u/YOUR_GITHUB_ID?v=4" width="100px"> |
+| <img src="https://avatars.githubusercontent.com/u/70837945?v=4" width="120" height="120" /> | <img src="https://avatars.githubusercontent.com/u/72748734?v=4" width="120" height="120" /> | <img src="https://avatars.githubusercontent.com/u/113874212?v=4" width="120" height="120" /> |
 |:---:|:---:|:---:|
-| **심규보**<br>[@Qbooo](https://github.com/Qbooo) | **이승준**<br>[@Username](https://github.com/Username) | **사재헌**<br>[@Username](https://github.com/Username) |
-| Backend & Database | Frontend & Dashboard | Security & WAF |
+| **심규보**<br>[@Qbooo](https://github.com/Qbooo) | **이승준**<br>[@HiLeeS](https://github.com/HiLeeS) | **사재헌**<br>[@Zaixian5](https://github.com/Zaixian5) |
+| Backend & Frontend | WAF & Dashboard | Database & WAF |
 
 <br/>
 
@@ -75,11 +75,16 @@
 * **Oracle Database**: 고객 데이터 및 트랜잭션 관리
 
 ### 🔹 Monitoring Stack
-![ELK](https://img.shields.io/badge/ELK-Stack-005571?style=flat-square) ![Elasticsearch](https://img.shields.io/badge/Elasticsearch-8.x-005571?style=flat-square) ![Logstash](https://img.shields.io/badge/Logstash-8.x-005571?style=flat-square) ![Kibana](https://img.shields.io/badge/Kibana-8.x-005571?style=flat-square)
+![ELK](https://img.shields.io/badge/ELK-Stack-005571?style=flat-square) ![Elasticsearch](https://img.shields.io/badge/Elasticsearch-8.x-005571?style=flat-square) ![Filebeat](https://img.shields.io/badge/Filebeat-8.x-005571?style=flat-square) ![Kibana](https://img.shields.io/badge/Kibana-8.x-005571?style=flat-square)
 
 * **Elasticsearch**: 로그 데이터 저장 및 검색 엔진
-* **Logstash**: WAF 로그 수집 및 파싱 파이프라인
+* **Filebeat**: ModSecurity 로그 수집 및 경량 파싱 에이전트
 * **Kibana**: 실시간 공격 패턴 시각화 대시보드
+
+
+### 🔹 Attack Simulation
+![k6](https://img.shields.io/badge/k6-Load_Testing-7D64FF?style=flat-square)
+* **k6**: 자동화된 공격 시뮬레이션
 
 ---
 
@@ -108,7 +113,7 @@ graph TB
     end
     
     subgraph "Monitoring Layer"
-        B -->|로그 전송| H[Logstash]
+        B -->|ModSecurity 로그| H[Filebeat]
         H -->|파싱 & 저장| I[(Elasticsearch)]
         I -->|시각화| J[Kibana Dashboard]
     end
@@ -261,10 +266,10 @@ SELECT * FROM customers WHERE region = '서울'
 
 ### 8-1. 🚀 초기 설정
 
-**1) Docker Compose로 ELK 스택 구동**
+**1) Docker Compose로 Monitoring 스택 구동**
 
 ```bash
-docker-compose up -d elasticsearch logstash kibana
+docker-compose up -d elasticsearch filebeat kibana
 ```
 
 **2) Oracle 데이터베이스 연결 확인**
@@ -313,27 +318,22 @@ curl "http://localhost/search?q=<script>alert('XSS')</script>"
 
 ### 8-3. 📊 Kibana 대시보드 확인
 
-**Logstash 파이프라인 설정**:
+**Filebeat 설정 개요**:
 ```ruby
-input {
-  file {
-    path => "/var/log/nginx/modsec_audit.log"
-    start_position => "beginning"
-  }
-}
+filebeat.inputs:
+  - type: filestream
+    paths:
+      - /var/log/nginx/modsec_audit.log
 
-filter {
-  grok {
-    match => { "message" => "%{COMBINEDAPACHELOG}" }
-  }
-}
+processors:
+  - decode_json_fields:
+      fields: ["message"]
+      target: "modsec"
+      overwrite_keys: true
 
-output {
-  elasticsearch {
-    hosts => ["elasticsearch:9200"]
-    index => "waf-logs-%{+YYYY.MM.dd}"
-  }
-}
+output.elasticsearch:
+  hosts: ["elasticsearch:9200"]
+  index: "waf-logs-%{+yyyy.MM.dd}"
 ```
 
 **Kibana에서 확인 가능한 정보**:
